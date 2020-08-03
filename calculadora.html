@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora</title>
+    <style>
+        body {
+            background-color: bisque;
+        }
+
+        div#telaResp {
+            background-color: red;
+            width: 315pt;
+            height: 30pt;
+            color: white;
+            margin-top: 20pt;
+            font: 12pt arial;
+        }
+
+        input {
+            background-color: green;
+            width: 150pt;
+            height: 30pt;
+            color: white;
+            margin-top: 30pt;
+            font: 12pt arial;
+        }
+
+        button {
+            background-color: chartreuse;
+        }
+
+        ::placeholder {
+            color: white;
+            font: 12pt arial;
+        }
+
+        h1 {
+            font: 18pt arial;
+            color: blue;
+        }
+
+        h2 {
+            font: 14pt arial;
+            color: blue;
+        }
+
+        h3 {
+            font: 12pt arial;
+            color: blue;
+        }
+
+        li {
+            font: 12pt arial;
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Calculadora de <i><strong>dois</strong></i> números.</h1>
+    <h2>Algumas informações:</h2>
+    <li>subtrair: o Número 1 será o minuendo e o Número 2 será o subtraendo;</li>
+    <li>dividir: o Número 1 será o dividendo e o Número 2 será o divisor;</li>
+    <li>MMC: mínimo múltiplo comum (numeros inteiros maiores que zero);</li>
+    <li>pares / ímpares: retorna a soma dos números pares e ímpares no intervalo do Número1 ao Número2;</li>
+    <li>primos / não primos: retorna a soma dos números primos no intervalo do Número1 ao Número2.</li>
+    <h3>Números primos conceito: são números naturais maiores que 1 que possuem somente dois divisores.</h3>
+    <h3>Em breve atualizaremos inserindo mais funções, por exemplo MDC.</h3>
+
+    <input id="numero1" type="number" placeholder="Número 1">
+    <input id="numero2" type="number" placeholder="Número 2">
+    <button id="somar">somar</button>
+    <button id="subtrair">subtrair</button>
+    <button id="multiplicar">multiplicar</button>
+    <button id="dividir">dividir</button>
+    <button id="MMC">MMC</button>
+    <button id="paresimpares">pares / ímpares</button>
+    <button id="primosnaoprimos">primos / não primos</button>
+    <div id="telaResp">o resultado aparecerá aqui</div>
+</body>
+<script>
+
+    // adicionando eventos para todos os botões
+    document.querySelector('button#somar').addEventListener('click', Somar)
+    document.querySelector('button#subtrair').addEventListener('click', Subtrair)
+    document.querySelector('button#multiplicar').addEventListener('click', Multiplicar)
+    document.querySelector('button#dividir').addEventListener('click', Dividir)
+    document.querySelector('button#MMC').addEventListener('click', CalcularMMC)
+    document.querySelector('button#paresimpares').addEventListener('click', SomaIntervaloParesImpares)
+    document.querySelector('button#primosnaoprimos').addEventListener('click', SomaPrimosNaoPrimos)
+
+    function Somar() {
+        var parcela1 = Number(numero1.value)
+        var parcela2 = Number(numero2.value)
+        var soma = parcela1 + parcela2
+        // identificando a tela de resposta atravé do ID e alterando o texto no seu interior (inner.Text).
+        // exibindo a mensagem na tela concatenando mensagens com valores das variáveis
+        document.querySelector('div#telaResp').innerText = `a soma entre ${parcela1} e ${parcela2} é ${soma}`
+    }
+
+    function Subtrair() {
+        var minuendo = Number(numero1.value)
+        var subtraendo = Number(numero2.value)
+        var diferenca = minuendo - subtraendo
+        document.querySelector('div#telaResp').innerText = `a subtração entre ${minuendo} e ${subtraendo} é ${diferenca}`
+    }
+
+    function Multiplicar() {
+        var fator1 = Number(numero1.value)
+        var fator2 = Number(numero2.value)
+        var produto = fator1 * fator2
+        document.querySelector('div#telaResp').innerText = `a multiplicação entre ${fator1} e ${fator2} é ${produto}`
+
+    }
+
+    function Dividir() {
+        var dividendo = Number(numero1.value)
+        var divisor = Number(numero2.value)
+        if (divisor != 0) {
+            var quociente = dividendo / divisor
+            document.querySelector('div#telaResp').innerText = `a divisão entre ${dividendo} e ${divisor} é ${quociente}`
+        } else {
+            document.querySelector('div#telaResp').innerText = 'divisor não pode ser zero!'
+        }
+    }
+
+    function CalcularMMC() {
+        var entrada1 = parseInt(numero1.value)
+        var entrada2 = parseInt(numero2.value)
+        var entrada1Inicial = parseInt(numero1.value) // mantendo o valor inicial digitado pelo o usuário para ser exibido na tela
+        var entrada2Inicial = parseInt(numero2.value)
+        var divisor = 2
+        var resultado = 1
+        if (entrada1 <= 0 || entrada2 <= 0) {
+            document.querySelector('div#telaResp').innerText = 'Número1 e Número2 precisam serem maiores que zero!'
+        } else {
+            while (entrada1 > 1 || entrada2 > 1) { // o cálculo continua até encontrar todos os múltiplos de cada número (definição MMC)
+                if (entrada1 % divisor == 0 && entrada2 % divisor == 0) {
+                    entrada1 /= divisor
+                    entrada2 /= divisor
+                    resultado *= divisor
+                } else if (entrada1 % divisor == 0 && entrada2 % divisor != 0) {
+                    entrada1 /= divisor
+                    resultado *= divisor
+                } else if (entrada2 % divisor == 0 && entrada1 % divisor != 0) {
+                    entrada2 /= divisor
+                    resultado *= divisor
+                } else {
+                    divisor++
+                }
+            }
+            document.querySelector('div#telaResp').innerText = `o mínimo múltiplo comum entre ${entrada1Inicial} e ${entrada2Inicial} é ${resultado}`
+        }
+    }
+
+    function SomaIntervaloParesImpares() {
+        var entrada1 = parseInt(numero1.value)
+        var entrada2 = parseInt(numero2.value)
+        var somaPares = 0
+        var somaImpares = 0
+        if (entrada1 < entrada2) {
+            for (var percorreIntervalo = entrada1; percorreIntervalo <= entrada2; percorreIntervalo++) {
+                if (percorreIntervalo % 2 == 0) {
+                    somaPares += percorreIntervalo
+                } else {
+                    somaImpares += percorreIntervalo
+                }
+            }
+            document.querySelector('div#telaResp').innerText = `a soma dos números pares no intervalo de ${entrada1} a ${entrada2} é: ${somaPares} e de ímpares é: ${somaImpares}`
+        } else {
+            document.querySelector('div#telaResp').innerText = 'para este cálculo o Número 1 precisa ser menor que o Número 2.'
+        }
+    }
+
+    function SomaPrimosNaoPrimos() {
+        var entrada1 = parseInt(numero1.value)
+        var entrada2 = parseInt(numero2.value)
+        var somaPrimos = 0
+        var divisores = 0
+        if (entrada1 < entrada2) {
+            for (var i = entrada1; i <= entrada2; i++) {
+                for (var j = 1; j <= i; j++) { // varrendo cada número no intervalo definido pelo o usuário (incluindo os números digitados)
+                    if (i % j == 0) { // verficando se cada número no intervalo é primo
+                        divisores++
+                    }
+                }
+                if (divisores == 2) {
+                    somaPrimos += i
+                }
+                divisores = 0
+            }
+            document.querySelector('div#telaResp').innerText = `a soma dos números primos no intervalo de ${entrada1} a ${entrada2} é : ${somaPrimos}`
+        } else {
+            document.querySelector('div#telaResp').innerText = 'para este cálculo o Número 1 precisa ser menor que o Número 2.'
+        }
+    }
+
+</script>
+
+</html>
